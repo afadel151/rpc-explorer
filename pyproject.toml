@@ -1,0 +1,44 @@
+[project]
+name = "rpclab"
+version = "0.1.0"
+description = "RPC Explorer & Benchmark Lab — custom JSON/socket RPC, gRPC, REST compared"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.12,<3.13"
+authors = [
+    {name = "Fadel Akram"},
+]
+dependencies = [
+    "grpcio>=1.68,<2",
+    "grpcio-tools>=1.68,<2",
+    "protobuf>=5,<6",
+    "typer>=0.15,<1",
+    "rich>=13,<14",
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.34,<1",
+    "httpx>=0.28,<1",
+]
+
+[project.scripts]
+rpclab = "rpclab.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rpclab"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8,<9",
+    "ruff>=0.8,<1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+src = ["src"]
+line-length = 100

@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ── RPC Explorer ──────────────────────────────────────────
+# Generated protobuf code
+src/rpclab/grpc_rpc/generated/
+*_pb2.py
+*_pb2_grpc.py
+
+# Benchmark result files
+results/
