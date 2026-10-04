@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package inventory;
+
+// ── Service definition ───────────────────────────────────────────────
+service InventoryService {
+  rpc Ping(PingRequest)                   returns (PingResponse);
+  rpc CalculateFactorial(FactorialRequest) returns (FactorialResponse);
+  rpc GetProductDetails(ProductRequest)    returns (ProductDetails);
+  rpc UpdateStock(UpdateStockRequest)      returns (UpdateStockResponse);
+  rpc StreamAnalytics(AnalyticsRequest)    returns (stream AnalyticsPoint);
+  rpc ResetInventory(ResetRequest)         returns (ResetResponse);
+}
+
+// ── Ping ─────────────────────────────────────────────────────────────
+message PingRequest {
+  int32 sleep_ms = 1;
+}
+
+message PingResponse {
+  bool pong = 1;
+  int64 server_time_ns = 2;
+}
+
+// ── Factorial ────────────────────────────────────────────────────────
+message FactorialRequest {
+  int32 n = 1;
+}
+
+message FactorialResponse {
+  string result = 1;   // decimal string — protobuf has no bigint
+  int32 digits = 2;
+}
+
+// ── Product ──────────────────────────────────────────────────────────
+message ProductRequest {
+  string product_id = 1;
+}
+
+message ProductDetails {
+  string product_id = 1;
+  string name = 2;
+  string description = 3;
+  int64 price_cents = 4;
+  string currency = 5;
+  int32 stock_quantity = 6;
+  repeated string tags = 7;
+  map<string, string> attributes = 8;
+  string warehouse = 9;
+}
+
+// ── Stock update ─────────────────────────────────────────────────────
+message UpdateStockRequest {
+  string product_id = 1;
+  int32 delta = 2;
+  string idempotency_key = 3;  // optional — empty string means none
+}
+
+message UpdateStockResponse {
+  string product_id = 1;
+  int32 new_quantity = 2;
+  bool applied = 3;
+}
+
+// ── Analytics (server streaming) ─────────────────────────────────────
+message AnalyticsRequest {
+  string metric = 1;   // cpu | latency | sales
+  int32 count = 2;
+  int32 interval_ms = 3;
+}
+
+message AnalyticsPoint {
+  int32 seq = 1;
+  string metric = 2;
+  double value = 3;
+  double running_avg = 4;
+  int64 server_ts_ns = 5;
+}
+
+// ── Reset ────────────────────────────────────────────────────────────
+message ResetRequest {}
+
+message ResetResponse {
+  bool reset = 1;
+}
